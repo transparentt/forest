@@ -1,0 +1,47 @@
+{
+  "recording": {
+    "minimumDuration": 0.35,
+    "sampleRate": 16000
+  },
+  "transcription": {
+    "runnerPath": "/Users/YOUR_USER/.localvoiceinput/bin/qwen3_asr_transcribe.py",
+    "serverRunnerPath": "/Users/YOUR_USER/.localvoiceinput/bin/qwen3_asr_server.py",
+    "serverURL": "http://127.0.0.1:8765",
+    "timeout": 180
+  },
+  "paste": {
+    "restoreDelay": 0.5
+  },
+  "hotkey": {
+    "keyCode": 61,
+    "displayName": "右Option"
+  },
+  "customization": {
+    "enabled": false,
+    "model": "gemma4:e4b",
+    "serverURL": "http://127.0.0.1:8765",
+    "backendURL": "http://127.0.0.1:11434/api/generate",
+    "timeout": 45,
+    "instruction": "",
+    "selectedPresetID": null,
+    "presets": [],
+    "voiceInstructionEnabled": false,
+    "voiceInstructionMode": "append"
+  },
+  "userDictionary": {
+    "enabled": false,
+    "entries": [
+      {
+        "source": "くえん",
+        "target": "Qwen"
+      },
+      {
+        "source": "あくあぼいす",
+        "target": "AquaVoice"
+      }
+    ]
+  },
+  "logging": {
+    "enabled": true
+  }
+}

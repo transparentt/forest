@@ -1,0 +1,5 @@
+accelerate
+qwen-asr
+soundfile
+torch
+transformers
