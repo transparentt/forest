@@ -15,13 +15,70 @@ Audio and transcription stay local. The app does not call a cloud transcription 
 
 - macOS 14 or later.
 - Xcode or Command Line Tools with a matching Swift compiler and macOS SDK.
+- Homebrew packages: `uv` and `ollama`.
 - Microphone permission.
 - Accessibility and Input Monitoring permissions for global shortcut detection and automatic paste.
-- A local executable Qwen3-ASR-1.7B runner.
+- Local model files downloaded on each Mac by the setup scripts.
+
+Install the small command-line dependencies:
+
+```sh
+brew install uv ollama
+```
 
 ## Build
 
-For a new development Mac, see [Move to Another Mac](#move-to-another-mac) first.
+Clone the repository:
+
+```sh
+git clone https://github.com/transparentt/forest.git
+cd forest
+```
+
+Full local setup, including Python runner dependencies, Qwen3-ASR model download, local config, app build, and install to `~/Applications/Forest.app`:
+
+```sh
+scripts/setup_all.sh
+```
+
+Open the installed app:
+
+```sh
+open ~/Applications/Forest.app
+```
+
+Start Ollama before using Gemma customization:
+
+```sh
+ollama serve
+```
+
+If `ollama serve` says it is already running, that is fine. Forest's local server will run `ollama pull gemma4:e4b` automatically the first time customization needs Gemma. To download it manually:
+
+```sh
+ollama pull gemma4:e4b
+```
+
+On first launch, open **Forest 設定 > 権限設定** and allow:
+
+- Microphone
+- Accessibility
+- Input Monitoring
+
+## Update From Git
+
+On each Mac, update the app from GitHub:
+
+```sh
+git pull --ff-only
+scripts/build_app.sh
+scripts/install_app.sh
+open ~/Applications/Forest.app
+```
+
+Run `scripts/setup_all.sh` instead of the build/install pair when setting up a Mac for the first time, or after changing runner dependencies.
+
+## Development Commands
 
 Build a minimal menu bar `.app` bundle:
 
@@ -53,12 +110,6 @@ Full local setup, including Python runner dependencies, model download, local co
 scripts/setup_all.sh
 ```
 
-Run the bundled app:
-
-```sh
-open .build/Forest.app
-```
-
 Install and run it from `~/Applications` to avoid macOS asking for Documents folder access during normal use:
 
 ```sh
@@ -85,89 +136,6 @@ Run tests:
 
 ```sh
 scripts/run_tests.sh
-```
-
-## Move to Another Mac
-
-Use this when another development Mac already has Command Line Tools and can receive the lightweight project files.
-
-Do not transfer generated or heavy files:
-
-- `.build/`
-- `.venv/`
-- `__pycache__/`
-- `*.pyc`
-- `~/.localvoiceinput/models/`
-- downloaded model files
-
-Create a lightweight archive from this Mac:
-
-```sh
-scripts/create_transfer_archive.sh
-```
-
-Copy `Forest-transfer.zip` to the other Mac, then unzip it there:
-
-```sh
-unzip Forest-transfer.zip -d Forest
-cd Forest
-```
-
-On the other Mac, install the small command-line dependencies first:
-
-```sh
-brew install uv ollama
-```
-
-If Homebrew is not available, install `uv` and Ollama by any local policy that provides these commands:
-
-```sh
-uv --version
-ollama --version
-```
-
-Then run the full setup on the other Mac. This creates `~/.localvoiceinput/venv`, installs Python dependencies, downloads Qwen3-ASR into `~/.localvoiceinput/models/Qwen3-ASR-1.7B`, creates config, builds Forest, and installs it to `~/Applications/Forest.app`.
-
-```sh
-scripts/setup_all.sh
-```
-
-Start Ollama before using Gemma customization:
-
-```sh
-ollama serve
-```
-
-If `ollama serve` says it is already running, that is fine. Forest's local server will run `ollama pull gemma4:e4b` automatically the first time customization needs Gemma. To download it manually:
-
-```sh
-ollama pull gemma4:e4b
-```
-
-Open the installed app:
-
-```sh
-open ~/Applications/Forest.app
-```
-
-On first launch, open **Forest 設定 > 権限設定** and allow:
-
-- Microphone
-- Accessibility
-- Input Monitoring
-
-If permissions look allowed in System Settings but Forest does not detect them, run:
-
-```sh
-scripts/reset_permissions.sh
-open ~/Applications/Forest.app
-```
-
-For validation on the other Mac:
-
-```sh
-scripts/run_tests.sh
-scripts/build_app.sh
 ```
 
 ## Toolchain Setup
@@ -298,7 +266,7 @@ stdout:
 
 ## Current Prototype Boundary
 
-The app code defines the local Qwen runner contract, but does not bundle Qwen3-ASR-1.7B. This keeps the transfer package lightweight. Download the model locally on each Mac with `scripts/setup_all.sh` or `scripts/download_qwen_model.sh`.
+The app code defines the local Qwen runner contract, but does not bundle Qwen3-ASR-1.7B. This keeps the Git repository lightweight. Download the model locally on each Mac with `scripts/setup_all.sh` or `scripts/download_qwen_model.sh`.
 
 The included `scripts/qwen3_asr_transcribe.py` runner expects a local model directory at:
 
